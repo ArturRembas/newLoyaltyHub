@@ -1,6 +1,7 @@
 package it.unicam.cs.ids.LoyaltyHub.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -34,8 +35,11 @@ public class ActivityAdmin implements Employee {
 
     private String surname;
 
+    @Column(nullable = false, unique = true)
+    @NotEmpty(message = "Inserire email")
     private String email;
 
+    @Column(nullable = false, unique = true)
     private String phone;
 
     private final UserType userType = UserType.ACTIVITY_ADMIN;
@@ -63,4 +67,58 @@ public class ActivityAdmin implements Employee {
     public int hashCode() {
         return getClass().hashCode();
     }
+
+	public Long getActivityAdminId() {
+		return activityAdminId;
+	}
+
+	public void setActivityAdminId(Long activityAdminId) {
+		this.activityAdminId = activityAdminId;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getSurname() {
+		return surname;
+	}
+
+	public void setSurname(String surname) {
+		this.surname = surname;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public Activity getActivity() {
+		return activity;
+	}
+
+	public void setActivity(Activity activity) {
+		this.activity = activity;
+	}
+
+	public UserType getUserType() {
+		return userType;
+	}
+
+
 }

@@ -29,8 +29,10 @@ public class Costumer implements User{
 
     private String surname;
 
+    @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(nullable = false, unique = true)
     private String phone;
 
 
@@ -60,4 +62,20 @@ public class Costumer implements User{
     public int hashCode() {
         return getClass().hashCode();
     }
+
+	public String getEmail() {
+		return email;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
 }

@@ -1,6 +1,10 @@
 package it.unicam.cs.ids.LoyaltyHub.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.Hibernate;
 
@@ -27,16 +31,25 @@ public class Activity {
 
     private String address;
 
+    @Column(nullable = false, unique = true)
+    @NotNull
+    @NotEmpty
     private String vatCode;
 
+    @Column(nullable = false, unique = true)
+    @Email
+    @NotEmpty
+    @NotNull
     private String email;
 
     private String phone;
 
+    @NotEmpty
+    @Column(nullable = false, unique = true)
     private String adminEmail;
 
     @OneToOne(orphanRemoval = true)
-    @JoinColumn(name = "activity_admin_activity_admin_id")
+    @JoinColumn(name = "activity_admin_activity_admin_id", unique = true)
     private ActivityAdmin activityAdmin;
 
     @ManyToOne
@@ -89,5 +102,69 @@ public class Activity {
 		// TODO Auto-generated method stub
 		
 	}
+
+	public Long getActivityId() {
+		return activityId;
+	}
+
+	public void setActivityId(Long activityId) {
+		this.activityId = activityId;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public LoyaltyProgram getLoyaltyProgram() {
+		return loyaltyProgram;
+	}
+
+	public void setLoyaltyProgram(LoyaltyProgram loyaltyProgram) {
+		this.loyaltyProgram = loyaltyProgram;
+	}
+
+	public ActivityAdmin getActivityAdmin() {
+		return activityAdmin;
+	}
+
+	public String getVatCode() {
+		return vatCode;
+	}
+
+	public void setVatCode(String vatCode) {
+		this.vatCode = vatCode;
+	}
+
+
+
+
 
 }

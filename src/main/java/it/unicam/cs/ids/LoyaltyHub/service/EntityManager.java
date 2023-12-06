@@ -1,9 +1,17 @@
 package it.unicam.cs.ids.LoyaltyHub.service;
 
+import it.unicam.cs.ids.LoyaltyHub.exception.EntityNotFoundException;
+import it.unicam.cs.ids.LoyaltyHub.exception.IdConflictException;
+import org.springframework.transaction.annotation.Transactional;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 /**
  *  An interface that defines the CRUD operations for a generic entity.
  */
 
+@Transactional
 public interface EntityManager <T,I extends Number>{
 
         /**
@@ -12,7 +20,7 @@ public interface EntityManager <T,I extends Number>{
          * @param id The id of the entity to be retrieved.
          * @return An instance of the class that implements this interface.
          */
-        T getInstance( I id) ;
+		T getInstance(@Valid @NotNull I id) throws EntityNotFoundException;
 
 
         /**
@@ -21,7 +29,7 @@ public interface EntityManager <T,I extends Number>{
          * @param object The object to be created.
          * @return The object that was created.
          */
-        T create(T object);
+        T create(T object) throws EntityNotFoundException, IdConflictException;
 
 
         /**
@@ -39,7 +47,7 @@ public interface EntityManager <T,I extends Number>{
          * @param id The id of the object to delete.
          * @return A boolean value.
          */
-        boolean delete(I id);
+        boolean delete(I id) throws EntityNotFoundException, IdConflictException;
 
         /**
          * Returns true if the object with the given id exists in the database.

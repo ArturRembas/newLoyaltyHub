@@ -2,6 +2,8 @@ package it.unicam.cs.ids.LoyaltyHub.controller;
 
 import it.unicam.cs.ids.LoyaltyHub.model.Activity;
 import it.unicam.cs.ids.LoyaltyHub.service.ActivityManager;
+import it.unicam.cs.ids.LoyaltyHub.exception.EntityNotFoundException;
+import it.unicam.cs.ids.LoyaltyHub.exception.IdConflictException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,13 +14,13 @@ public class SimpleActivityController implements ActivityController{
     private ActivityManager activityManager;
     @Override
     @GetMapping("/{id}")
-    public Activity getInstance(@PathVariable Long id) {
+    public Activity getInstance(@PathVariable Long id) throws EntityNotFoundException {
         return activityManager.getInstance(id);
     }
 
     @Override
     @PostMapping("/createNew")
-    public Activity create(@RequestBody Activity object) {
+    public Activity create(@RequestBody Activity object) throws IdConflictException, EntityNotFoundException {
         return activityManager.create(object);
     }
 
@@ -28,8 +30,9 @@ public class SimpleActivityController implements ActivityController{
     }
 
     @Override
-    public boolean delete(Long id) {
-        return false;
+    @DeleteMapping("/deleteActivity/{id}")
+    public boolean delete(@PathVariable Long id) throws IdConflictException, EntityNotFoundException {
+        return activityManager.delete(id);
     }
 
     @Override
@@ -39,7 +42,7 @@ public class SimpleActivityController implements ActivityController{
 
     @Override
     @PostMapping("/createNewWithAdmin")
-    public Activity createActivityWithAdmin(@RequestBody Activity activity) {
+    public Activity createActivityWithAdmin(@RequestBody Activity activity) throws IdConflictException, EntityNotFoundException {
         return activityManager.createActivityWithAdminEmail(activity);
     }
 }

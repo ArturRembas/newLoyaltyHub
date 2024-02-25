@@ -1,38 +1,32 @@
 package it.unicam.cs.ids.LoyaltyHub.model;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-import org.hibernate.Hibernate;
-
 import java.util.Objects;
 
+import org.hibernate.Hibernate;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import lombok.*;
+
+/**
+ * Represents an admin of an activity in the LoyaltyHub system.
+ * This entity manages the administrative details for a business activity.
+ */
 @Entity
 @Getter
 @Setter
 @ToString
 @RequiredArgsConstructor
+@NoArgsConstructor
 @Table(name = "activity_admin")
 public class ActivityAdmin implements Employee {
     @Id
-    @SequenceGenerator(
-            name = "admin_sequence",
-            sequenceName = "admin_sequence",
-            allocationSize = 1
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "admin_sequence")
-    @SequenceGenerator
-            (name = "admin_sequence")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "admin_sequence")
+    @SequenceGenerator(name = "admin_sequence", sequenceName = "admin_sequence", allocationSize = 1)
     @Column(name = "activity_admin_id", nullable = false)
     private Long activityAdminId;
 
     private String name;
-
     private String surname;
 
     @Column(nullable = false, unique = true)
@@ -47,7 +41,14 @@ public class ActivityAdmin implements Employee {
     @OneToOne(mappedBy = "activityAdmin", orphanRemoval = true)
     private Activity activity;
 
-
+    /**
+     * Creates a new ActivityAdmin with specified details.
+     *
+     * @param name    The name of the admin.
+     * @param surname The surname of the admin.
+     * @param email   The email address of the admin.
+     * @param phone   The phone number of the admin.
+     */
     public ActivityAdmin(String name, String surname, String email, String phone) {
         this.name = name;
         this.surname = surname;
@@ -67,58 +68,46 @@ public class ActivityAdmin implements Employee {
     public int hashCode() {
         return getClass().hashCode();
     }
-
-	public Long getActivityAdminId() {
-		return activityAdminId;
-	}
-
-	public void setActivityAdminId(Long activityAdminId) {
-		this.activityAdminId = activityAdminId;
-	}
-
+    
+	/**
+	 * @return the name
+	 */
 	public String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
+	/**
+	 * @return the surname
+	 */
 	public String getSurname() {
 		return surname;
 	}
 
-	public void setSurname(String surname) {
-		this.surname = surname;
-	}
-
+	/**
+	 * @return the email
+	 */
 	public String getEmail() {
 		return email;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
+	/**
+	 * @return the phone
+	 */
 	public String getPhone() {
 		return phone;
 	}
 
-	public void setPhone(String phone) {
-		this.phone = phone;
+	/**
+	 * @return the activityAdminId
+	 */
+	public Long getActivityAdminId() {
+		return activityAdminId;
 	}
 
-	public Activity getActivity() {
-		return activity;
-	}
-
+	/**
+	 * @param activity the activity to set
+	 */
 	public void setActivity(Activity activity) {
 		this.activity = activity;
 	}
-
-	public UserType getUserType() {
-		return userType;
-	}
-
-
 }

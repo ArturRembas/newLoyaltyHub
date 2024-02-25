@@ -5,6 +5,7 @@ import it.unicam.cs.ids.LoyaltyHub.exception.IdConflictException;
 import it.unicam.cs.ids.LoyaltyHub.model.Costumer;
 import it.unicam.cs.ids.LoyaltyHub.repository.CostumerRepository;
 import it.unicam.cs.ids.LoyaltyHub.service.CostumerManager;
+import it.unicam.cs.ids.LoyaltyHub.repository.CostumerWalletRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +16,8 @@ public class SimpleCostumerController implements CostumerController{
     private CostumerManager costumerManager;
     @Autowired
     private CostumerRepository costumerRepository;
+    @Autowired
+    private CostumerWalletRepository costumerWalletRepository;
 
     @Override
     @GetMapping("/{id}")
@@ -29,17 +32,25 @@ public class SimpleCostumerController implements CostumerController{
     }
 
     @Override
-    public Costumer update(Costumer object) {
-        return null;
+    @PostMapping("/update")
+    public Costumer update(@RequestBody Costumer object) throws IdConflictException, EntityNotFoundException {
+    	return costumerManager.update(object);
     }
 
     @Override
-    public boolean delete(Long id) {
-        return false;
+    @DeleteMapping("/delete/{id}")
+    public boolean delete(@PathVariable Long id) throws IdConflictException, EntityNotFoundException {
+    	return costumerManager.delete(id);
     }
 
     @Override
-    public boolean exists(Long id) {
-        return false;
+    @GetMapping("/exists/{id}")
+    public boolean exists(@PathVariable  Long id) {
+    	return costumerManager.exists(id);
+    }
+
+    @GetMapping("/costumerEmail/{emailCostumer}")
+    public Costumer findCostumerByEmail(@PathVariable String emailCostumer) throws EntityNotFoundException {
+    	return costumerRepository.findByEmail(emailCostumer);
     }
 }

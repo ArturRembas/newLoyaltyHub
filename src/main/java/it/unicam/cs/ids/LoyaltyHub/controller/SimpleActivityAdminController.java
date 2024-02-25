@@ -4,6 +4,7 @@ import it.unicam.cs.ids.LoyaltyHub.exception.EntityNotFoundException;
 import it.unicam.cs.ids.LoyaltyHub.exception.IdConflictException;
 import it.unicam.cs.ids.LoyaltyHub.model.ActivityAdmin;
 import it.unicam.cs.ids.LoyaltyHub.service.ActivityAdminManager;
+import it.unicam.cs.ids.LoyaltyHub.repository.ActivityAdminRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 public class SimpleActivityAdminController implements ActivityAdminController{
     @Autowired
     private ActivityAdminManager activityAdminManager;
+    @Autowired
+    private ActivityAdminRepository activityAdminRepository;
     @Override
     @GetMapping("/{id}")
     public ActivityAdmin getInstance(@PathVariable Long id) throws EntityNotFoundException{
@@ -25,19 +28,21 @@ public class SimpleActivityAdminController implements ActivityAdminController{
     }
 
     @Override
-    public ActivityAdmin update(ActivityAdmin object) {
-        return null;
+    @PostMapping("/update")
+    public ActivityAdmin update(@RequestBody ActivityAdmin object) throws IdConflictException, EntityNotFoundException {
+    	return activityAdminManager.update(object);
     }
 
     @Override
-    @DeleteMapping("/deleteAdmin/{id}")
+    @DeleteMapping("/delete/{id}")
     public boolean delete(@PathVariable Long id) throws IdConflictException, EntityNotFoundException {
         return activityAdminManager.delete(id);
     }
 
     @Override
-    public boolean exists(Long id) {
-        return false;
+    @GetMapping("/exists/{id}")
+    public boolean exists(@PathVariable Long id) {
+    	return activityAdminManager.exists(id);
     }
 
 

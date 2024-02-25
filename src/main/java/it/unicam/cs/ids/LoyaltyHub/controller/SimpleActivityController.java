@@ -25,19 +25,21 @@ public class SimpleActivityController implements ActivityController{
     }
 
     @Override
-    public Activity update(Activity object) {
-        return null;
+    @PostMapping("/update")
+    public Activity update(@RequestBody Activity object) throws IdConflictException, EntityNotFoundException {
+    	return activityManager.update(object);
     }
 
     @Override
-    @DeleteMapping("/deleteActivity/{id}")
+    @DeleteMapping("/delete/{id}")
     public boolean delete(@PathVariable Long id) throws IdConflictException, EntityNotFoundException {
         return activityManager.delete(id);
     }
 
     @Override
-    public boolean exists(Long id) {
-        return false;
+    @GetMapping("/exists/{id}")
+    public boolean exists(@PathVariable Long id) {
+    	return activityManager.exists(id);
     }
 
     @Override

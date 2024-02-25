@@ -1,21 +1,21 @@
 package it.unicam.cs.ids.LoyaltyHub.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 
 import java.util.Objects;
 
+/**
+ * Represents a business activity in the LoyaltyHub system.
+ * This entity manages the details of a business activity participating in the loyalty program.
+ */
 @Entity
 @Getter
 @Setter
 @ToString
 @RequiredArgsConstructor
-
 @Table(name = "activity")
 public class Activity {
     @Id
@@ -28,7 +28,6 @@ public class Activity {
     private Long activityId;
 
     private String name;
-
     private String address;
 
     @Column(nullable = false, unique = true)
@@ -37,27 +36,39 @@ public class Activity {
     private String vatCode;
 
     @Column(nullable = false, unique = true)
-    @Email
-    @NotEmpty
-    @NotNull
+    @NotEmpty(message = "Inserire email")
+    @Pattern(regexp = "[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\."
+            + "[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+)*@"
+            + "(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\\.)+[A-Za-z0-9]"
+            + "(?:[A-Za-z0-9-]*[A-Za-z0-9])?",
+            message = "{invalid.email}")
     private String email;
-
+    
     private String phone;
-
+    
     @NotEmpty
     @Column(nullable = false, unique = true)
     private String adminEmail;
-
+    
     @OneToOne(orphanRemoval = true)
     @JoinColumn(name = "activity_admin_activity_admin_id", unique = true)
-    private ActivityAdmin activityAdmin;
-
+    public ActivityAdmin activityAdmin;
+    
     @ManyToOne
     @JoinColumn(name = "loyalty_program_loyalty_program_id")
     private LoyaltyProgram loyaltyProgram;
 
-
-
+    /**
+     * Constructor for Activity with detailed parameters.
+     *
+     * @param name           The name of the activity.
+     * @param address        The address of the activity.
+     * @param vatCode        The VAT code of the activity.
+     * @param email          The email address of the activity.
+     * @param phone          The phone number of the activity.
+     * @param activityAdmin  The admin associated with the activity.
+     * @param loyaltyProgram The loyalty program associated with the activity.
+     */
     public Activity(String name, String address, String vatCode, String email, String phone, ActivityAdmin activityAdmin, LoyaltyProgram loyaltyProgram) {
         this.name = name;
         this.address = address;
@@ -68,6 +79,16 @@ public class Activity {
         this.loyaltyProgram = loyaltyProgram;
     }
 
+    /**
+     * Constructor for Activity with essential parameters.
+     *
+     * @param name        The name of the activity.
+     * @param address     The address of the activity.
+     * @param vatCode     The VAT code of the activity.
+     * @param email       The email address of the activity.
+     * @param phone       The phone number of the activity.
+     * @param adminEmail  The admin email of the activity.
+     */
     public Activity(String name, String address, String vatCode, String email, String phone, String adminEmail) {
         this.name = name;
         this.address = address;
@@ -77,7 +98,7 @@ public class Activity {
         this.adminEmail = adminEmail;
     }
 
-    @Override
+	@Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
@@ -90,81 +111,53 @@ public class Activity {
         return getClass().hashCode();
     }
 
-	public String getAdminEmail() {
-		return adminEmail;
-	}
-
-	public void setAdminEmail(String adminEmail) {
-		this.adminEmail = adminEmail;
-	}
-
-	public void setActivityAdmin(ActivityAdmin findAdminByEmail) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public Long getActivityId() {
-		return activityId;
-	}
-
-	public void setActivityId(Long activityId) {
-		this.activityId = activityId;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getPhone() {
-		return phone;
-	}
-
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
-
-	public LoyaltyProgram getLoyaltyProgram() {
-		return loyaltyProgram;
-	}
-
-	public void setLoyaltyProgram(LoyaltyProgram loyaltyProgram) {
-		this.loyaltyProgram = loyaltyProgram;
-	}
-
-	public ActivityAdmin getActivityAdmin() {
-		return activityAdmin;
-	}
-
+	/**
+	 * @return the vatCode
+	 */
 	public String getVatCode() {
 		return vatCode;
 	}
 
-	public void setVatCode(String vatCode) {
-		this.vatCode = vatCode;
+	/**
+	 * @return the email
+	 */
+	public String getEmail() {
+		return email;
 	}
 
+	/**
+	 * @return the adminEmail
+	 */
+	public String getAdminEmail() {
+		return adminEmail;
+	}
 
+	/**
+	 * @return the activityAdmin
+	 */
+	public ActivityAdmin getActivityAdmin() {
+		return activityAdmin;
+	}
 
+	/**
+	 * @return the phone
+	 */
+	public String getPhone() {
+		return phone;
+	}
 
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @param activityAdmin the activityAdmin to set
+	 */
+	public void setActivityAdmin(ActivityAdmin activityAdmin) {
+		this.activityAdmin = activityAdmin;
+	}
 
 }

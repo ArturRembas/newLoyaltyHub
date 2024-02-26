@@ -4,73 +4,84 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.Hibernate;
-import java.util.Map;
-import java.util.LinkedHashSet;
-import java.util.Objects;
+
+import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Represents a fidelity card in the LoyaltyHub system.
- * This class manages the association between customers and loyalty programs.
+ * Represents a fidelity card associated with a customer. 
+ * This card tracks the customer's total points, cashback, and associated loyalty programs and transactions.
  */
 @Entity
+@NoArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor
-@Table(name = "fidelity_card")
 public class FidelityCard {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "fidelity_card_seq")
-    @SequenceGenerator(name = "fidelity_card_seq", sequenceName = "fidelity_card_seq", allocationSize = 1)
-    @Column(name = "fidelity_card_id", nullable = false)
-    private Long fidelityCardId;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "fidelityCardGenerator")
+    @SequenceGenerator(name = "fidelityCardGenerator", allocationSize = 1)
+    @Column(name = "card_id", nullable = false)
+    private Long cardId;
 
-    @ManyToMany
-    @JoinTable(name = "fidelity_card_loyalty_programs",
-            joinColumns = @JoinColumn(name = "fidelity_card_fidelity_card_id"),
-            inverseJoinColumns = @JoinColumn(name = "loyalty_programs_loyalty_program_id"))
-    private Set<LoyaltyProgram> loyaltyPrograms = new LinkedHashSet<>();
+    private int totalPoints = 0;
+    private String level;
+    private double cashback = 0.0;
 
-    @OneToOne(mappedBy = "fidelityCard", orphanRemoval = true)
-    private CostumerWallet costumerWallet;
+    @OneToOne(orphanRemoval = true)
+    @JoinColumn(name = "costumer_user_id", unique = true)
+    private Costumer costumer;
 
-    @ElementCollection
-    private Map<LoyaltyProgram, Transactions> map;
+    @ManyToMany(mappedBy = "fidelityCards")
+    private Set<LoyaltyProgram> loyaltyPrograms = new HashSet<>();
+
+    @OneToMany(mappedBy = "fidelityCard", orphanRemoval = true)
+    private Set<Transaction> transactions = new HashSet<>();
 
     /**
-     * Creates a new FidelityCard with the specified customer wallet.
+     * Constructs a new FidelityCard for a specified customer.
      *
-     * @param costumerWallet The wallet associated with this fidelity card.
+     * @param costumer the customer to whom this card is associated.
      */
-    public FidelityCard(CostumerWallet costumerWallet) {
-        this.costumerWallet = costumerWallet;
+    public FidelityCard(Costumer costumer) {
+        this.costumer = costumer;
     }
-    
-    public FidelityCard() {
-		
-	}
 
-    @Override
-	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o))
-			return false;
-		FidelityCard that = (FidelityCard) o;
-		return fidelityCardId != null && Objects.equals(fidelityCardId, that.fidelityCardId);
-	}
+    /**
+     * Adds points to the total points on the card.
+     *
+     * @param value the number of points to add.
+     */
+    public void addPoints(int value) {
+        this.totalPoints += value;
+    }
 
-	@Override
-	public int hashCode() {
-		return getClass().hashCode();
-	}
-	
-    @Override
-    public String toString() {
-        return getClass().getSimpleName() + "(" +
-                "fidelityCardId = " + fidelityCardId + ", " +
-                "costumerWallet = " + costumerWallet + ")";
+    /**
+     * Removes points from the total points on the card.
+     *
+     * @param value the number of points to remove.
+     * @return the new total points after removal.
+     */
+    public int removePoints(int value) {
+        this.totalPoints -= value;
+        return this.totalPoints;
+    }
+
+    /**
+     * Associates a loyalty program with this card.
+     *
+     * @param loyaltyProgram the loyalty program to associate.
+     */
+    public void addLoyaltyProgram(LoyaltyProgram loyaltyProgram) {
+        this.loyaltyPrograms.add(loyaltyProgram);
+    }
+
+    /**
+     * Adds a cashback value to the card.
+     *
+     * @param value the cashback value to add.
+     */
+    public void addCashback(double value) {
+        this.cashback += value;
     }
 }

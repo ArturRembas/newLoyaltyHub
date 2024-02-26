@@ -1,123 +1,51 @@
 package it.unicam.cs.ids.LoyaltyHub.model;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Pattern;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
-import org.hibernate.Hibernate;
-
-import java.util.Objects;
 
 /**
- * Represents a customer in the LoyaltyHub system.
- * This entity manages the personal details and wallet information of a customer.
+ * Represents a customer in the loyalty platform, extending the User entity
+ * with a unique fidelity card for tracking loyalty program participation.
  */
 @Entity
-@Getter
-@Setter
-@ToString
 @NoArgsConstructor
-@Table(name = "costumer")
-public class Costumer implements User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "costumer_seq")
-    @SequenceGenerator(name = "costumer_seq", sequenceName = "costumer_seq", allocationSize = 1)
-    @Column(name = "costumer_id", nullable = false)
-    private Long costumerId;
+@Setter
+@Getter
+public class Costumer extends User {
 
-    private String name;
     private String surname;
 
-    @Column(nullable = false, unique = true)
-    @NotEmpty(message = "Inserire email")
-    @Pattern(regexp = "[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\\\.\"\n"
-    		+ "                + \"[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+)*@\"\n"
-    		+ "                + \"(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\\\\.)+[A-Za-z0-9]\"\n"
-    		+ "                + \"(?:[A-Za-z0-9-]*[A-Za-z0-9])?", message = "{invalid.email}")
-    private String email;
-
-    @Column(nullable = false, unique = true)
-    @NotEmpty
-    private String phone;
-
-    private final UserType userType = UserType.COSTUMER;
-
-    @OneToOne(orphanRemoval = true)
-    @JoinColumn(name = "costumer_wallet_wallet_id")
-    private CostumerWallet costumerWallet;
+    /**
+     * The fidelity card associated with this customer, indicating participation in the loyalty program.
+     * The JsonIgnore annotation prevents the fidelity card from being serialized in JSON responses.
+     */
+    @OneToOne(mappedBy = "costumer", orphanRemoval = true)
+    @JsonIgnore
+    private FidelityCard fidelityCard;
 
     /**
-     * Creates a new Costumer with specified name, surname, email, and phone number.
+     * Constructs a new Costumer with specified personal and contact details.
      *
      * @param name    The first name of the customer.
      * @param surname The surname of the customer.
+     * @param address The physical address of the customer.
      * @param email   The email address of the customer.
-     * @param phone   The phone number of the customer.
+     * @param phone   The contact phone number of the customer.
      */
-    public Costumer(String name, String surname, String email, String phone) {
-        this.name = name;
-        this.surname = surname;
-        this.email = email;
-        this.phone = phone;
+    public Costumer(String name, String surname, String address, String email, String phone) {
+        super(name, surname, address, email, phone);
     }
 
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * @return the surname
-	 */
-	public String getSurname() {
-		return surname;
-	}
-
-	/**
-	 * @return the email
-	 */
-	public String getEmail() {
-		return email;
-	}
-
-	/**
-	 * @return the phone
-	 */
-	public String getPhone() {
-		return phone;
-	}
-
-	/**
-	 * @return the costumerWallet
-	 */
-	public CostumerWallet getCostumerWallet() {
-		return costumerWallet;
-	}
-
-	/**
-	 * @param costumerWallet the costumerWallet to set
-	 */
-	public void setCostumerWallet(CostumerWallet costumerWallet) {
-		this.costumerWallet = costumerWallet;
-	}
-
-	@Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Costumer costumer = (Costumer) o;
-        return costumerId != null && Objects.equals(costumerId, costumer.costumerId);
+    /**
+     * Associates a fidelity card with this customer for loyalty program tracking.
+     *
+     * @param card The FidelityCard to be associated with this customer.
+     */
+    public void addCard(FidelityCard card) {
+        this.fidelityCard = card;
     }
-
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
-    }
-
 }

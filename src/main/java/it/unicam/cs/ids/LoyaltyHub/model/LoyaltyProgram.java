@@ -1,89 +1,126 @@
 package it.unicam.cs.ids.LoyaltyHub.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import it.unicam.cs.ids.LoyaltyHub.model.rules.Rule;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.Hibernate;
 
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 
-import org.hibernate.Hibernate;
-
 /**
- * Represents a loyalty program in the LoyaltyHub system.
- * This entity manages the details and rules of a loyalty program, including associated fidelity cards and activities.
+ * Represents a loyalty program in the loyalty platform system. It is identified by a unique ID
+ * and contains information about the program name, associated fidelity cards, enrolled activities,
+ * and applicable rules.
  */
 @Entity
+@NoArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor
-@Table(name = "loyalty_program")
 public class LoyaltyProgram {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "loyalty_program_seq")
-    @SequenceGenerator(name = "loyalty_program_seq", sequenceName = "loyalty_program_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "loyaltyProgramGenerator")
+    @SequenceGenerator(name = "loyaltyProgramGenerator", allocationSize = 1)
     @Column(name = "loyalty_program_id", nullable = false)
     private Long loyaltyProgramId;
 
     private String programName;
-    private int multiplier;
-    private int thresholdCounter;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "activity_admin_id", nullable = false)
-    private ActivityAdmin activityAdmin;
-
-    @ManyToMany(mappedBy = "loyaltyPrograms")
+    @ManyToMany
+    @JsonIgnore
+    @JoinTable(name = "loyalty_program_fidelity_cards",
+            joinColumns = @JoinColumn(name = "loyalty_program_loyalty_program_id"),
+            inverseJoinColumns = @JoinColumn(name = "fidelity_cards_card_id"))
     private Set<FidelityCard> fidelityCards = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "loyaltyProgram", orphanRemoval = true)
-    private Set<Activity> activities = new LinkedHashSet<>();
+    @JsonIgnore
+    private Set<Activity> enrolledActivities = new LinkedHashSet<>();
 
-	public LoyaltyProgram() {
-		
-	}
-    
+    @ManyToMany
+    @JsonIgnore
+    @JoinTable(name = "loyalty_program_rules",
+            joinColumns = @JoinColumn(name = "loyalty_program_loyalty_program_id"),
+            inverseJoinColumns = @JoinColumn(name = "rules_rule_id"))
+    private Set<Rule> rules = new LinkedHashSet<>();
+
     /**
-     * Creates a new LoyaltyProgram with specified details.
+     * Constructs a new LoyaltyProgram with the specified program name.
      *
-     * @param programName    The name of the loyalty program.
-     * @param activityAdmin  The admin responsible for the loyalty program.
-     * @param fidelityCards  The set of fidelity cards associated with this loyalty program.
-     * @param activities     The set of activities that participate in this loyalty program.
+     * @param programName The name of the loyalty program.
      */
-    public LoyaltyProgram(String programName, ActivityAdmin activityAdmin, Set<FidelityCard> fidelityCards, Set<Activity> activities) {
+    public LoyaltyProgram(String programName) {
         this.programName = programName;
-        this.activityAdmin = activityAdmin;
-        this.fidelityCards = fidelityCards;
-        this.activities = activities;
     }
 
+    /**
+     * Constructs a new LoyaltyProgram with the specified program name and a single rule.
+     *
+     * @param programName The name of the loyalty program.
+     * @param rule        A rule to be associated with the loyalty program.
+     */
+    public LoyaltyProgram(String programName, Rule rule) {
+        this.programName = programName;
+        this.rules.add(rule);
+    }
 
-    // equals, hashCode and toString methods
+    /**
+     * Adds a rule to the loyalty program.
+     *
+     * @param rule The rule to be added.
+     * @return true if the rule was added successfully, false otherwise.
+     */
+    public boolean addRule(Rule rule) {
+        rule.addLoyaltyProgram(this);
+        return rules.add(rule);
+    }
+
+    /**
+     * Enrolls an activity in the loyalty program.
+     *
+     * @param activity The activity to be enrolled.
+     */
+    public void enrollActivity(Activity activity) {
+        this.enrolledActivities.add(activity);
+        activity.setLoyaltyProgram(this);
+        activity.setProgramName(this.programName);
+    }
+
+    /**
+     * Unenrolls an activity from the loyalty program.
+     *
+     * @param activity The activity to be unenrolled.
+     */
+    public void unEnrolledActivity(Activity activity) {
+        this.enrolledActivities.remove(activity);
+        activity.setLoyaltyProgram(null);
+        activity.setProgramName(null);
+    }
+
+    /**
+     * Enrolls a customer in the loyalty program by adding their fidelity card to the program.
+     *
+     * @param costumer The customer to be enrolled.
+     */
+    public void enrollCostumer(Costumer costumer) {
+        this.fidelityCards.add(costumer.getFidelityCard());
+        costumer.getFidelityCard().addLoyaltyProgram(this);
+    }
+
     @Override
-	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o))
-			return false;
-		LoyaltyProgram that = (LoyaltyProgram) o;
-		return loyaltyProgramId != null && Objects.equals(loyaltyProgramId, that.loyaltyProgramId);
-	}
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        LoyaltyProgram that = (LoyaltyProgram) o;
+        return loyaltyProgramId != null && Objects.equals(loyaltyProgramId, that.loyaltyProgramId);
+    }
 
     @Override
     public int hashCode() {
         return getClass().hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return getClass().getSimpleName() + "(" +
-                "loyaltyProgramId = " + loyaltyProgramId + ", " +
-                "programName = " + programName + ", " +
-                "multiplier = " + multiplier + ", " +
-                "thresholdCounter = " + thresholdCounter + ", " +
-                "activityAdmin = " + activityAdmin + ")";
     }
 }

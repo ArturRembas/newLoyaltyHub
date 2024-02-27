@@ -1,51 +1,50 @@
 package it.unicam.cs.ids.LoyaltyHub.repository;
 
 import it.unicam.cs.ids.LoyaltyHub.model.Activity;
+import it.unicam.cs.ids.LoyaltyHub.model.LoyaltyProgram;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Repository interface for {@link Activity} entities.
- * Extends the {@link CrudRepository} interface provided by Spring Data to include additional methods
- * for retrieving and checking {@link Activity} entities based on their attributes.
+ * Repository interface for handling persistence operations for {@link Activity} entities.
+ * Extends {@link CrudRepository} to provide standard CRUD functionalities.
  */
 public interface ActivityRepository extends CrudRepository<Activity, Long> {
 
     /**
-     * Checks whether an {@link Activity} entity with the given ID exists.
+     * Updates the {@link LoyaltyProgram} associated with all {@link Activity} entities.
      *
-     * @param activityId The ID of the {@link Activity} to check.
-     * @return {@code true} if an entity with the given ID exists, {@code false} otherwise.
+     * @param loyaltyProgram The new loyalty program to associate with activities.
+     * @return The number of entities updated.
      */
-    boolean existsByActivityId(Long activityId);
+    @Transactional
+    @Modifying
+    @Query("UPDATE Activity a SET a.loyaltyProgram = ?1")
+    int updateLoyaltyProgramBy(LoyaltyProgram loyaltyProgram);
 
     /**
-     * Deletes an {@link Activity} entity with the specified ID.
+     * Retrieves an {@link Activity} entity based on its email.
      *
-     * @param activityId The ID of the {@link Activity} to be deleted.
+     * @param email The email associated with the activity.
+     * @return The {@link Activity} entity if found, or {@code null} otherwise.
      */
-    void deleteByActivityId(Long activityId);
+    Activity findByEmail(String email);
 
     /**
-     * Checks whether an {@link Activity} entity with the given VAT code exists.
+     * Checks if an {@link Activity} entity exists with the given email.
      *
-     * @param vatCode The VAT code of the {@link Activity} to check.
-     * @return {@code true} if an entity with the given VAT code exists, {@code false} otherwise.
-     */
-    boolean existsByVatCode(String vatCode);
-
-    /**
-     * Checks whether an {@link Activity} entity with the given phone number exists.
-     *
-     * @param phone The phone number of the {@link Activity} to check.
-     * @return {@code true} if an entity with the given phone number exists, {@code false} otherwise.
-     */
-    boolean existsByPhone(String phone);
-
-    /**
-     * Checks whether an {@link Activity} entity with the given email exists.
-     *
-     * @param email The email of the {@link Activity} to check.
+     * @param email The email to check for existence.
      * @return {@code true} if an entity with the given email exists, {@code false} otherwise.
      */
     boolean existsByEmail(String email);
+
+    /**
+     * Finds an {@link Activity} entity based on its ID.
+     *
+     * @param activityId The ID of the activity.
+     * @return The {@link Activity} entity if found, or {@code null} otherwise.
+     */
+    Activity findById(long activityId);
 }

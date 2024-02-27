@@ -1,5 +1,8 @@
 package it.unicam.cs.ids.LoyaltyHub.controller;
 
+import it.unicam.cs.ids.LoyaltyHub.exception.EntityNotFoundException;
+import it.unicam.cs.ids.LoyaltyHub.exception.IdConflictException;
+import it.unicam.cs.ids.LoyaltyHub.model.Costumer;
 import it.unicam.cs.ids.LoyaltyHub.model.FidelityCard;
 
 /**
@@ -10,20 +13,10 @@ import it.unicam.cs.ids.LoyaltyHub.model.FidelityCard;
 public interface FidelityCardController extends EntityController<FidelityCard, Long> {
 
     /**
-     * Creates a {@link FidelityCard} with an associated loyalty program.
+     * Add a {@link FidelityCard} to a {@link Costumer}.
      *
-     * @param costumerEmail Email of the costumer to whom the card will be associated.
-     * @param loyaltyProgramName Name of the loyalty program to associate with the card.
-     * @return The created {@link FidelityCard} with the associated loyalty program.
+     * @param (@link Costumer)
+     * @throws (@link IdConflictException), (@link EntityNotFoundException)
      */
-    FidelityCard createWithLoyaltyProgram(String costumerEmail, String loyaltyProgramName);
-
-    /**
-     * Creates a {@link FidelityCard} without an associated loyalty program.
-     *
-     * @param costumerEmail Email of the costumer to whom the card will be associated.
-     * @return The created {@link FidelityCard} without an associated loyalty program.
-     * @throws SpecificException if an error occurs during the creation process.
-     */
-    FidelityCard createWithoutLoyaltyProgram(String costumerEmail) throws Exception;
+	void addNewCardToCostumer(Costumer costumer) throws IdConflictException, EntityNotFoundException;
 }

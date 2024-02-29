@@ -7,5 +7,11 @@ import it.unicam.cs.ids.LoyaltyHub.model.ActivityJoinRequest;
  * interface to provide additional management capabilities specific to activity join requests.
  */
 public interface ActivityJoinRequestManager extends EntityManager<ActivityJoinRequest, Long> {
+
+	Iterable<ActivityJoinRequest> listAllRequests();
+
+	ActivityJoinRequest getRequestById(Long id);
+
+	ActivityJoinRequest validateRequest(Long id);
 	
 }

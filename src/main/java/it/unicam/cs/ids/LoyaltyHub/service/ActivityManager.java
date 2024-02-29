@@ -23,4 +23,6 @@ public interface ActivityManager extends EntityManager<Activity, Long> {
      * @throws IdConflictException if there are conflicts related to the loyalty program association.
      */
     Activity updateWithLoyaltyProgram(Long activityId, LoyaltyProgram program) throws EntityNotFoundException, IdConflictException;
+
+	Activity getActivityByEmail(String activityEmail);
 }

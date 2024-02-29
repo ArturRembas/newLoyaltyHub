@@ -8,5 +8,11 @@ import it.unicam.cs.ids.LoyaltyHub.model.EmployeeJoinRequest;
  * possibly additional functionalities specific to employee join requests.
  */
 public interface EmployeeJoinRequestManager extends EntityManager<EmployeeJoinRequest, Long> {
+
+	Iterable<EmployeeJoinRequest> listAllRequests();
+
+	EmployeeJoinRequest getRequestById(Long id);
+
+	EmployeeJoinRequest validateRequest(Long id);
     
 }

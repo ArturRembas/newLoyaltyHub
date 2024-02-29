@@ -53,4 +53,86 @@ public class Transaction {
     public void validate() {
         this.validated = true;
     }
+
+    /**
+     * Checks if the transaction is validated.
+     *
+     * @return true if the transaction is validated, false otherwise.
+     */
+    public boolean isValidated() {
+        return this.validated;
+    }
+
+    /**
+     * Retrieves the activity associated with this transaction.
+     *
+     * @return The {@link Activity} object linked to this transaction.
+     */
+    public Activity getActivity() {
+        return this.activity;
+    }
+
+    /**
+     * Retrieves the fidelity card associated with this transaction.
+     *
+     * @return The {@link FidelityCard} object linked to this transaction.
+     */
+    public FidelityCard getFidelityCard() {
+        return this.fidelityCard;
+    }
+
+    /**
+     * Updates the validation status of this transaction.
+     *
+     * @param validated The new validation status to set.
+     */
+    public void setValidated(boolean validated) {
+        this.validated = validated;
+    }
+
+    /**
+     * Sets the fidelity card associated with this transaction.
+     *
+     * @param fidelityCard The {@link FidelityCard} object to associate with this transaction.
+     */
+    public void setFidelityCard(FidelityCard fidelityCard) {
+        this.fidelityCard = fidelityCard;
+    }
+
+    /**
+     * Sets the activity associated with this transaction.
+     *
+     * @param activity The {@link Activity} object to associate with this transaction.
+     */
+    public void setActivity(Activity activity) {
+        this.activity = activity;
+    }
+
+    /**
+     * Retrieves the price associated with this transaction.
+     *
+     * @return The price linked to this transaction.
+     */
+	public int getPrice() {
+		return this.price;
+	}
+
+	/**
+     * Retrieves the ID of fidelity card.
+     *
+     * @return The the ID of fidelity card.
+     */
+	public Long getFidelityCardId() {
+        return this.fidelityCard != null ? this.fidelityCard.getCardId() : null;
+    }
+
+	/**
+     * Retrieves the ID of Activity.
+     *
+     * @return The the ID of Activity.
+     */
+    public Long getActivityId() {
+        return this.activity != null ? this.activity.getId() : null;
+    }
+
 }

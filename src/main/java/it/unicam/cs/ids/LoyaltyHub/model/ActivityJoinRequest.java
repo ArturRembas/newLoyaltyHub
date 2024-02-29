@@ -59,4 +59,39 @@ public class ActivityJoinRequest implements JoinRequest {
     public void validate() {
         this.validated = true;
     }
+
+    /**
+     * Retrieves the email address associated with the activity in this join request.
+     *
+     * @return The email address of the activity.
+     */
+    public String getActivityEmail() {
+        return this.activityEmail;
+    }
+
+    /**
+     * Retrieves the phone number associated with the activity in this join request.
+     *
+     * @return The phone number of the activity.
+     */
+    public String getPhone() {
+        return this.phone;
+    }
+
+    /**
+     * Retrieves the name associated with the activity in this join request.
+     *
+     * @return The name number of the activity.
+     */
+	public String getActivityName() {
+		return activityName;
+	}
+
+	public String getVatCode() {
+		return this.vatCode;
+	}
+
+	public String getAddress() {
+		return this.address;
+	}
 }

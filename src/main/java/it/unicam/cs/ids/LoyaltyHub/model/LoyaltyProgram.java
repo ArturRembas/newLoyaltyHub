@@ -123,4 +123,51 @@ public class LoyaltyProgram {
     public int hashCode() {
         return getClass().hashCode();
     }
+
+    /**
+     * Retrieves the name of the loyalty program.
+     *
+     * @return The name of the loyalty program.
+     */
+    public String getProgramName() {
+        return this.programName;
+    }
+
+    /**
+     * Retrieves the ID of the loyalty program.
+     *
+     * @return The ID of the loyalty program.
+     */
+	public Long getLoyaltyProgramId() {
+		return this.loyaltyProgramId;
+	}
+
+	/**
+     * Retrieves the enrolled activities of the loyalty program.
+     *
+     * @return The enrolled activities of the loyalty program.
+     */
+	public Set<Activity> getEnrolledActivities() {
+		return this.enrolledActivities;
+	}
+
+	/**
+     * Retrieves the fidelity cards of the loyalty program.
+     *
+     * @return The fidelity cards of the loyalty program.
+     */
+	public Iterable<FidelityCard> getFidelityCards() {
+		return this.fidelityCards;
+	}
+	
+	/**
+     * Retrieves the rules of the loyalty program.
+     *
+     * @return The rules of the loyalty program.
+     */
+	public Set<Rule> getRules() {
+		return this.rules;
+	}
+
+
 }

@@ -39,4 +39,31 @@ public abstract class User {
         this.email = email;
         this.phone = phone;
     }
+
+    /**
+     * Gets the unique identifier of this User.
+     *
+     * @return The unique identifier of the user.
+     */
+    public Long getUserId() {
+        return this.userId;
+    }
+
+    /**
+     * Gets the email of this User.
+     *
+     * @return The email of the user.
+     */
+	public String getEmail() {
+		return this.email;
+	}
+
+	/**
+     * Gets the phone of this User.
+     *
+     * @return The phone of the user.
+     */
+	public String getPhone() {
+		return this.phone;
+	}
 }

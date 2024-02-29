@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -84,4 +85,67 @@ public class FidelityCard {
     public void addCashback(double value) {
         this.cashback += value;
     }
+
+    /**
+     * Gets the unique identifier of this FidelityCard.
+     *
+     * @return The unique identifier of the fidelity card.
+     */
+    public Long getId() {
+        return this.cardId;
+    }
+
+    /**
+     * Sets the total points on the card.
+     *
+     * @param points the new total points value to set.
+     */
+    public void setTotalPoints(int points) {
+        this.totalPoints = points;
+    }
+
+    /**
+     * Retrieves the total points accumulated on the card.
+     *
+     * @return the total points on the fidelity card.
+     */
+    public int getTotalPoints() {
+        return this.totalPoints;
+    }
+
+    /**
+     * Sets the level of the card based on the accumulated points.
+     *
+     * @param level the new level to set.
+     */
+    public void setLevel(String level) {
+        this.level = level;
+    }
+
+    /**
+     * Retrieves the unique identifier of this FidelityCard.
+     *
+     * @return the unique identifier of the fidelity card.
+     */
+    public Long getCardId() {
+        return this.cardId;
+    }
+
+    /**
+     * Retrieves the loyalty programs of this FidelityCard.
+     *
+     * @return the loyalty programs of the fidelity card.
+     */
+	public Collection<LoyaltyProgram> getLoyaltyPrograms() {
+		return this.loyaltyPrograms;
+	}
+
+	/**
+     * Retrieves the costumer of this FidelityCard.
+     *
+     * @return the costumer of the fidelity card.
+     */
+	public Costumer getCostumer() {
+		return costumer;
+	}
 }

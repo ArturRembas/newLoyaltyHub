@@ -24,6 +24,25 @@ public class PlatformAdmin extends User {
      * @param phone   The phone number of the PlatformAdmin.
      */
     public PlatformAdmin(String name, String surname, String email, String phone) {
-        super(name, surname, null, email, phone);
+        super(name, surname, email, phone);
     }
+
+    /**
+     * Retrieves the email address of this PlatformAdmin.
+     *
+     * @return The email address of the platform administrator.
+     */
+    public String getEmail() {
+        return super.getEmail();
+    }
+
+    /**
+     * Retrieves the phone number of this PlatformAdmin.
+     *
+     * @return The phone number of the platform administrator.
+     */
+    public String getPhone() {
+        return super.getPhone();
+    }
+
 }

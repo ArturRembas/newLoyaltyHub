@@ -72,4 +72,35 @@ public class CostumerJoinRequest implements JoinRequest {
     public int hashCode() {
         return Objects.hash(date, costumerEmail, phone);
     }
+
+    /**
+     * Retrieves the email address of the customer associated with this join request.
+     *
+     * @return The email address of the customer.
+     */
+    public String getCostumerEmail() {
+        return this.costumerEmail;
+    }
+
+    /**
+     * Retrieves the phone number of the customer associated with this join request.
+     *
+     * @return The phone number of the customer.
+     */
+    public String getPhone() {
+        return this.phone;
+    }
+
+	public String getCostumerName() {
+		return this.costumerName;
+	}
+
+	public String getCostumerSurname() {
+		// TODO Auto-generated method stub
+		return this.costumerSurname;
+	}
+
+	public String getAddress() {
+		return this.address;
+	}
 }

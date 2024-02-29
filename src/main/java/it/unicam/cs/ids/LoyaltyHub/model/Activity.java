@@ -44,7 +44,53 @@ public class Activity extends User {
      * @param phone    The contact phone number for the activity.
      */
     public Activity(String name, String email, String vatCode, String address, String phone) {
-        super(name, "", address, email, phone);
+        super(name, address, email, phone);
         this.vatCode = vatCode;
     }
+
+    /**
+     * Gets the unique identifier of this Activity.
+     *
+     * @return The unique identifier of the activity.
+     */
+    public Long getId() {
+        return super.getUserId();
+    }
+
+    /**
+     * Associates a loyalty program with this activity.
+     *
+     * @param program The LoyaltyProgram to be associated with this activity.
+     */
+    public void setLoyaltyProgram(LoyaltyProgram program) {
+        this.loyaltyProgram = program;
+        this.programName = program.getProgramName();
+    }
+
+    /**
+     * Sets the name of the loyalty program associated with this activity.
+     *
+     * @param programName The name of the loyalty program to be associated with this activity.
+     */
+    public void setProgramName(String programName) {
+        this.programName = programName;
+    }
+
+    /**
+     * Retrieves the loyalty program associated with this activity.
+     *
+     * @return The LoyaltyProgram object associated with this activity.
+     */
+    public LoyaltyProgram getLoyaltyProgram() {
+        return this.loyaltyProgram;
+    }
+
+    /**
+     * Retrieves the program name associated with this activity.
+     *
+     * @return The program name associated with this activity.
+     */
+	public String getProgramName() {
+		return this.programName;
+	}
 }

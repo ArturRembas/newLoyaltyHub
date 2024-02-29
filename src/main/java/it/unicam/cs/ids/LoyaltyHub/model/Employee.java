@@ -31,6 +31,6 @@ public class Employee extends User {
      * @param phone   The contact phone number of the employee.
      */
     public Employee(String name, String surname, String address, String email, String phone) {
-        super(name, surname, address, email, phone);
+        super(name, surname,  email, phone);
     }
 }

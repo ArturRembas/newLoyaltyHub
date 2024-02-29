@@ -32,12 +32,11 @@ public class Costumer extends User {
      *
      * @param name    The first name of the customer.
      * @param surname The surname of the customer.
-     * @param address The physical address of the customer.
      * @param email   The email address of the customer.
      * @param phone   The contact phone number of the customer.
      */
     public Costumer(String name, String surname, String address, String email, String phone) {
-        super(name, surname, address, email, phone);
+        super(name, surname, email, phone);
     }
 
     /**
@@ -47,5 +46,29 @@ public class Costumer extends User {
      */
     public void addCard(FidelityCard card) {
         this.fidelityCard = card;
+    }
+
+    /**
+     * Associates a loyalty program with the customer's fidelity card.
+     *
+     * @param program The LoyaltyProgram to be associated with this customer's fidelity card.
+     */
+    public void setLoyaltyProgram(LoyaltyProgram program) {
+        if (this.fidelityCard != null) {
+            this.fidelityCard.addLoyaltyProgram(program);
+        } else {
+            FidelityCard newCard = new FidelityCard(this);
+            newCard.addLoyaltyProgram(program);
+            this.addCard(newCard);
+        }
+    }
+
+    /**
+     * Retrieves the fidelity card associated with this customer.
+     *
+     * @return The fidelity card associated with the customer.
+     */
+    public FidelityCard getFidelityCard() {
+        return this.fidelityCard;
     }
 }

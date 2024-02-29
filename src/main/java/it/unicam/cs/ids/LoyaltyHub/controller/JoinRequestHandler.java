@@ -1,8 +1,7 @@
-//TODO
-
 package it.unicam.cs.ids.LoyaltyHub.controller;
 
 import it.unicam.cs.ids.LoyaltyHub.exception.EntityNotFoundException;
+import it.unicam.cs.ids.LoyaltyHub.exception.IdConflictException;
 import it.unicam.cs.ids.LoyaltyHub.model.*;
 import it.unicam.cs.ids.LoyaltyHub.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,9 +97,10 @@ public class JoinRequestHandler {
      * @param id ID of the activity join request
      * @return {@link Activity} created from the join request
      * @throws EntityNotFoundException if the request with the given ID is not found
+     * @throws IdConflictException 
      */
     @PostMapping("/activity/validate/{id}")
-    public Activity validateActivityRequest(@PathVariable Long id) throws EntityNotFoundException {
+    public Activity validateActivityRequest(@PathVariable Long id) throws EntityNotFoundException, IdConflictException {
         ActivityJoinRequest request = activityRequestManager.validateRequest(id);
         return activityController.create(new Activity(request.getActivityName(), request.getActivityEmail(), request.getVatCode(), request.getAddress(), request.getPhone()));
     }
@@ -110,9 +110,10 @@ public class JoinRequestHandler {
      * @param id ID of the customer join request
      * @return {@link Costumer} created from the join request
      * @throws EntityNotFoundException if the request with the given ID is not found
+     * @throws IdConflictException 
      */
     @PostMapping("/customer/validate/{id}")
-    public Costumer validateCustomerRequest(@PathVariable Long id) throws EntityNotFoundException {
+    public Costumer validateCustomerRequest(@PathVariable Long id) throws EntityNotFoundException, IdConflictException {
         CostumerJoinRequest request = costumerRequestManager.validateRequest(id);
         Costumer costumer = new Costumer(request.getCostumerName(), request.getCostumerSurname(), request.getAddress(), request.getCostumerEmail(), request.getPhone());
         costumer = costumerController.create(costumer);
@@ -125,9 +126,10 @@ public class JoinRequestHandler {
      * @param id ID of the employee join request
      * @return {@link Employee} created from the join request
      * @throws EntityNotFoundException if the request with the given ID is not found
+     * @throws IdConflictException 
      */
     @PostMapping("/employee/validate/{id}")
-    public Employee validateEmployeeRequest(@PathVariable Long id) throws EntityNotFoundException {
+    public Employee validateEmployeeRequest(@PathVariable Long id) throws EntityNotFoundException, IdConflictException {
         EmployeeJoinRequest request = employeeRequestManager.validateRequest(id);
         return employeeController.create(new Employee(request.getEmployeeEmail(), request.getEmployeeName(), request.getEmployeeSurname(), request.getAddress(), request.getPhone()));
     }

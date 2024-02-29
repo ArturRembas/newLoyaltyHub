@@ -3,11 +3,13 @@ package it.unicam.cs.ids.LoyaltyHub.controller;
 import it.unicam.cs.ids.LoyaltyHub.exception.EntityNotFoundException;
 import it.unicam.cs.ids.LoyaltyHub.exception.IdConflictException;
 import it.unicam.cs.ids.LoyaltyHub.model.*;
+import it.unicam.cs.ids.LoyaltyHub.model.rules.Rule;
 import it.unicam.cs.ids.LoyaltyHub.repository.*;
 import it.unicam.cs.ids.LoyaltyHub.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 

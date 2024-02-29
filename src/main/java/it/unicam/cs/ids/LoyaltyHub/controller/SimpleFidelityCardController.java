@@ -48,7 +48,7 @@ public class SimpleFidelityCardController {
         return ResponseEntity.ok(createdCard);
     }
 
-    @Override
+    
     public FidelityCard update(FidelityCard object) throws IdConflictException, EntityNotFoundException {
         return null;
     }

@@ -106,7 +106,7 @@ public class SimpleCostumerController implements CostumerController {
      */
     @GetMapping("/listTransactions/{costumerEmail}")
     public Set<Transaction> listTransactions(@PathVariable String costumerEmail) {
-        return costumerManager.listTransactions(costumerEmail);
+        return ((SimpleCostumerController) costumerManager).listTransactions(costumerEmail);
     }
 
     /**
@@ -117,6 +117,6 @@ public class SimpleCostumerController implements CostumerController {
      */
     @GetMapping("/listPrograms/{costumerEmail}")
     public Set<LoyaltyProgram> listEnrolledPrograms(@PathVariable String costumerEmail) {
-        return costumerManager.listEnrolledPrograms(costumerEmail);
+        return ((SimpleCostumerController) costumerManager).listEnrolledPrograms(costumerEmail);
     }
 }

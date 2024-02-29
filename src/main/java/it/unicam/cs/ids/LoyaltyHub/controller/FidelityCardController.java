@@ -19,4 +19,6 @@ public interface FidelityCardController extends EntityController<FidelityCard, L
      * @throws (@link IdConflictException), (@link EntityNotFoundException)
      */
 	void addNewCardToCostumer(Costumer costumer) throws IdConflictException, EntityNotFoundException;
+
+	void createWithLoyaltyProgram(String email, Object object);
 }

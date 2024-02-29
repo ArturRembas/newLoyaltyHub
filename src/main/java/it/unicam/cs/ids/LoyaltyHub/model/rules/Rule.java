@@ -26,8 +26,8 @@ public abstract class Rule {
     @Column(name = "rule_id", nullable = false)
     private Long ruleId;
 
-    private String ruleName;
-    private RuleType type;
+    protected String ruleName;
+    protected RuleType type;
 
     @ManyToMany(mappedBy = "rules")
     private Set<LoyaltyProgram> loyaltyPrograms = new HashSet<>();

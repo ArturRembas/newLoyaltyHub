@@ -35,6 +35,24 @@ public class PersonalizedCashbackRule extends SimpleRulePoint {
     }
 
     /**
+     * Sets the rule type.
+     *
+     * @param ruleType The type of the rule.
+     */
+    private void setType(RuleType ruleType) {
+        this.type = ruleType;
+    }
+
+    /**
+     * Sets the name of the rule.
+     *
+     * @param ruleName The name of the rule.
+     */
+    private void setRuleName(String ruleName) {
+        this.ruleName = ruleName;
+    }
+
+	/**
      * Applies the cashback rule to the specified transaction by calculating the cashback
      * amount based on the transaction price and the set discount percentage. The cashback
      * is then added to the fidelity card associated with the transaction.

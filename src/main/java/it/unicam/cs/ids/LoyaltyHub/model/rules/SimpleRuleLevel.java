@@ -22,6 +22,8 @@ public class SimpleRuleLevel extends SimpleRulePoint {
     @Transient
     private final Map<String, Integer> thresholds;
 
+	private RuleType ruleType;
+
     /**
      * Constructs a new SimpleRuleLevel with predefined thresholds for each level.
      */
@@ -32,7 +34,25 @@ public class SimpleRuleLevel extends SimpleRulePoint {
         initializeThresholds();
     }
 
-    private void initializeThresholds() {
+    /**
+     * Sets the type of the rule.
+     *
+     * @param ruleType The type of the rule to be set.
+     */
+    private void setType(RuleType ruleType) {
+        // Assuming there's a field in the superclass or current class to hold the rule type
+        this.ruleType = ruleType;
+    }
+
+    /**
+     * Sets the name of the rule.
+     *
+     * @param ruleName The name of the rule to be set.
+     */
+    private void setRuleName(String ruleName) {
+        this.ruleName = ruleName;
+    }
+	private void initializeThresholds() {
         thresholds.put("Base", 100);
         thresholds.put("Intermedio", 300);
         thresholds.put("Avanzato", 500);

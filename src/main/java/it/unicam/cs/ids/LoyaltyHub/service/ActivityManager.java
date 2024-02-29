@@ -1,32 +1,26 @@
 package it.unicam.cs.ids.LoyaltyHub.service;
 
-import it.unicam.cs.ids.LoyaltyHub.model.Activity;
 import it.unicam.cs.ids.LoyaltyHub.exception.EntityNotFoundException;
 import it.unicam.cs.ids.LoyaltyHub.exception.IdConflictException;
+import it.unicam.cs.ids.LoyaltyHub.model.Activity;
+import it.unicam.cs.ids.LoyaltyHub.model.LoyaltyProgram;
 
 /**
- * Management interface for {@link Activity} entities.
- * Extends the {@link EntityManager} interface to provide specific management operations for {@link Activity} entities.
+ * Interface for managing {@link Activity} entities within the loyalty platform.
+ * Extends the generic {@link EntityManager} for basic CRUD operations and includes
+ * additional functionality to update activities with loyalty programs.
  */
 public interface ActivityManager extends EntityManager<Activity, Long> {
 
     /**
-     * Creates a new {@link Activity} with an associated admin email.
-     * This method might throw an {@link IdConflictException} if the activity ID conflicts with an existing entity,
-     * or an {@link EntityNotFoundException} if the associated admin email does not exist.
+     * Updates an existing {@link Activity} with a specified {@link LoyaltyProgram}.
+     * This method allows linking or changing the loyalty program associated with an activity.
      *
-     * @param activity The {@link Activity} to be created.
-     * @return The created {@link Activity} entity.
-     * @throws IdConflictException If there's a conflict with the activity's ID.
-     * @throws EntityNotFoundException If the associated admin email is not found.
+     * @param activityId The ID of the activity to update.
+     * @param program The loyalty program to associate with the activity.
+     * @return The updated {@link Activity} with the associated loyalty program.
+     * @throws EntityNotFoundException if the activity with the specified ID does not exist.
+     * @throws IdConflictException if there are conflicts related to the loyalty program association.
      */
-    Activity createActivityWithAdminEmail(Activity activity) throws IdConflictException, EntityNotFoundException;
-
-    /**
-     * Retrieves an {@link Activity} entity by its ID.
-     *
-     * @param id The ID of the {@link Activity} to retrieve.
-     * @return The found {@link Activity} entity.
-     */
-    Activity getActivityById(long id);
+    Activity updateWithLoyaltyProgram(Long activityId, LoyaltyProgram program) throws EntityNotFoundException, IdConflictException;
 }

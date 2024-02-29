@@ -1,29 +1,24 @@
 package it.unicam.cs.ids.LoyaltyHub.service;
 
+import it.unicam.cs.ids.LoyaltyHub.exception.EntityNotFoundException;
+import it.unicam.cs.ids.LoyaltyHub.exception.IdConflictException;
 import it.unicam.cs.ids.LoyaltyHub.model.FidelityCard;
-import it.unicam.cs.ids.LoyaltyHub.model.LoyaltyProgram;
 
 /**
- * Management interface for {@link FidelityCard} entities.
- * Extends the {@link EntityManager} interface to provide specific management operations for {@link FidelityCard} entities.
+ * Interface for managing {@link FidelityCard} entities within the loyalty platform.
+ * Provides CRUD operations through the {@code EntityManager} interface and includes
+ * additional functionality for updating fidelity card points.
  */
 public interface FidelityCardManager extends EntityManager<FidelityCard, Long> {
 
     /**
-     * Creates a new {@link FidelityCard} associated with a {@link LoyaltyProgram} using the customer's email and the loyalty program's name.
+     * Updates the points on a specified {@link FidelityCard}.
      *
-     * @param costumerEmail The email of the customer to whom the fidelity card is to be associated.
-     * @param loyaltyProgramName The name of the loyalty program to associate with the new fidelity card.
-     * @return The newly created {@link FidelityCard} with the associated loyalty program.
+     * @param object The {@link FidelityCard} object to update.
+     * @param points The new points value to set on the fidelity card.
+     * @return The updated points value.
+     * @throws EntityNotFoundException if the fidelity card is not found.
+     * @throws IdConflictException if there is a conflict with the fidelity card's ID.
      */
-    FidelityCard createWithLoyaltyProgram(String costumerEmail, String loyaltyProgramName);
-
-    /**
-     * Creates a new {@link FidelityCard} for a customer without associating it with a {@link LoyaltyProgram}.
-     *
-     * @param costumerEmail The email of the customer to whom the fidelity card is to be created.
-     * @return The newly created {@link FidelityCard} without any associated loyalty program.
-     * @throws Exception If the creation process encounters any issues.
-     */
-    FidelityCard createWithoutLoyaltyProgram(String costumerEmail) throws Exception;
+    int updatePoints(FidelityCard object, int points) throws EntityNotFoundException, IdConflictException;
 }

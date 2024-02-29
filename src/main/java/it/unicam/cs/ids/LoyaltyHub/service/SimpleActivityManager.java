@@ -1,116 +1,128 @@
 package it.unicam.cs.ids.LoyaltyHub.service;
 
-import it.unicam.cs.ids.LoyaltyHub.model.Activity;
-import it.unicam.cs.ids.LoyaltyHub.repository.ActivityRepository;
 import it.unicam.cs.ids.LoyaltyHub.exception.EntityNotFoundException;
 import it.unicam.cs.ids.LoyaltyHub.exception.IdConflictException;
-import it.unicam.cs.ids.LoyaltyHub.repository.ActivityAdminRepository;
-import java.util.Objects;
+import it.unicam.cs.ids.LoyaltyHub.model.Activity;
+import it.unicam.cs.ids.LoyaltyHub.model.LoyaltyProgram;
+import it.unicam.cs.ids.LoyaltyHub.repository.ActivityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+import java.util.Objects;
+
 /**
- * Service class that implements {@link ActivityManager} to manage {@link Activity} entities.
- * Provides CRUD operations and additional functionality to create activities with or without a linked loyalty program.
+ * Service class for managing activities within the loyalty platform.
+ * It handles the creation, retrieval, and deletion of activities, as well as updating activities with loyalty programs.
  */
 @Validated
 @Service
 public class SimpleActivityManager implements ActivityManager {
-    
+
     @Autowired
     private ActivityRepository activityRepository;
-    
-    @Autowired
-    private ActivityAdminRepository activityAdminRepository;
 
     /**
-     * Retrieves an {@link Activity} by its ID.
-     * @param id ID of the {@link Activity} to retrieve.
-     * @return the found {@link Activity}.
-     * @throws EntityNotFoundException if no {@link Activity} is found with the provided ID.
+     * Retrieves an activity by its ID.
+     *
+     * @param id The ID of the activity.
+     * @return The retrieved {@link Activity}.
+     * @throws EntityNotFoundException if the activity is not found.
      */
     @Override
     public Activity getInstance(Long id) throws EntityNotFoundException {
-        return activityRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Activity not found for id: " + id));
+        return activityRepository.findById(id).orElseThrow(() ->
+                new EntityNotFoundException("Activity with ID: " + id + " not found."));
     }
 
     /**
-     * Creates and saves a new {@link Activity} entity.
-     * @param object {@link Activity} to create.
-     * @return the saved {@link Activity}.
+     * Creates a new activity after performing necessary validations.
+     *
+     * @param object The {@link Activity} to create.
+     * @return The saved {@link Activity}.
+     * @throws EntityNotFoundException, IdConflictException if validations fail.
      */
     @Override
-    public Activity create(Activity object) {
+    public Activity create(Activity object) throws EntityNotFoundException, IdConflictException {
+        checkIfValuesAreNotNull(object);
+        checkCreation(object);
         return activityRepository.save(object);
     }
 
     /**
-     * Updates an existing {@link Activity}.
-     * @param object {@link Activity} to update.
-     * @return the updated {@link Activity}.
-     * @throws EntityNotFoundException if no {@link Activity} is found with the provided email.
+     * Updates an existing activity. This method is currently not implemented.
+     *
+     * @param object The {@link Activity} to update.
+     * @return null as this operation is not supported.
      */
     @Override
-    public Activity update(Activity object) throws EntityNotFoundException {
-        if(!activityRepository.existsByEmail(object.getEmail()))
-            throw new EntityNotFoundException("No activity with email: " + object.getEmail() + " found");
-        return activityRepository.save(object);
+    public Activity update(Activity object) throws EntityNotFoundException, IdConflictException {
+        throw new UnsupportedOperationException("Update operation is not supported.");
     }
 
     /**
-     * Deletes an {@link Activity} by its ID.
-     * @param id ID of the {@link Activity} to delete.
-     * @return true if the {@link Activity} was successfully deleted, false otherwise.
-     * @throws EntityNotFoundException if no {@link Activity} is found with the provided ID.
+     * Updates an activity with a specified loyalty program.
+     *
+     * @param activityId The ID of the activity to update.
+     * @param program The {@link LoyaltyProgram} to associate with the activity.
+     * @return The updated {@link Activity} with the associated loyalty program.
+     * @throws EntityNotFoundException if the activity or loyalty program is not found.
+     */
+    @Override
+    public Activity updateWithLoyaltyProgram(Long activityId, LoyaltyProgram program) throws EntityNotFoundException {
+        Activity activity = activityRepository.findById(activityId).orElseThrow(() ->
+                new EntityNotFoundException("Activity with ID: " + activityId + " not found."));
+        activity.setLoyaltyProgram(program);
+        return activityRepository.save(activity);
+    }
+
+    /**
+     * Deletes an activity by its ID.
+     *
+     * @param id The ID of the activity to delete.
+     * @return {@code true} if the activity was successfully deleted, {@code false} otherwise.
+     * @throws EntityNotFoundException if the activity does not exist.
      */
     @Override
     public boolean delete(Long id) throws EntityNotFoundException {
-        if(!this.exists(id))
-            throw new EntityNotFoundException("No activity with id: " + id + " found");
+        if (!activityRepository.existsById(id)) {
+            throw new EntityNotFoundException("Activity with ID: " + id + " not found, cannot delete.");
+        }
         activityRepository.deleteById(id);
-        return !this.exists(id);
+        return !activityRepository.existsById(id);
     }
 
     /**
-     * Checks if an {@link Activity} exists by its ID.
-     * @param id ID of the {@link Activity} to check.
-     * @return true if the {@link Activity} exists, false otherwise.
+     * Checks the existence of an activity by its ID.
+     *
+     * @param id The ID of the activity.
+     * @return {@code true} if the activity exists, {@code false} otherwise.
      */
     @Override
     public boolean exists(Long id) {
-        return activityRepository.existsByActivityId(id);
+        return activityRepository.existsById(id);
     }
 
-    @Override
-	public Activity getActivityById(long l) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-    
-    @Override
-    public Activity createActivityWithAdminEmail(Activity activity) throws IdConflictException, EntityNotFoundException {
-        checkIfFieldsAreNotNull(activity);
-        checkActivity(activity);
-        activity.setActivityAdmin(activityAdminRepository.findByEmail(activity.getAdminEmail()));
-        return this.create(activity);
+    /**
+     * Validates the creation of an activity, ensuring no conflicts with existing data.
+     *
+     * @param activity The {@link Activity} to validate.
+     * @throws IdConflictException if the activity conflicts with existing activities.
+     */
+    private void checkCreation(Activity activity) throws IdConflictException {
+        if (activityRepository.existsByEmail(activity.getEmail())) {
+            throw new IdConflictException("Activity already exists with email: " + activity.getEmail());
+        }
     }
-    
-        
-    private void checkIfFieldsAreNotNull(Activity activity) throws NullPointerException{
-        Objects.requireNonNull(activity.getEmail(),"Inserire mail valida");
-        Objects.requireNonNull(activity.getPhone(),"Inserire telefono valido");
-        Objects.requireNonNull(activity.getAdminEmail(),"Inserire Admin valido");
+
+    /**
+     * Ensures all required values in an activity are provided.
+     *
+     * @param activity The {@link Activity} to check.
+     * @throws NullPointerException if essential data is missing.
+     */
+    private void checkIfValuesAreNotNull(Activity activity) {
+        Objects.requireNonNull(activity.getEmail(), "Email is required.");
+        Objects.requireNonNull(activity.getPhone(), "Phone number is required.");
     }
-    
-	private void checkActivity(Activity activity) throws EntityNotFoundException, IdConflictException {
-		if (!activityAdminRepository.existsByEmail(activity.getAdminEmail()))
-			throw new EntityNotFoundException("Admin con mail: " + activity.getAdminEmail() + " non trovato");
-		if (activityRepository.existsByEmail(activity.getEmail()))
-			throw new IdConflictException("Esiste già un'attività con email: " + activity.getEmail());
-		if (activityRepository.existsByPhone(activity.getPhone()))
-			throw new IdConflictException("Esiste già un'attività con telefono: " + activity.getPhone());
-		if (activityRepository.existsByVatCode(activity.getVatCode()))
-			throw new IdConflictException("Esiste già un'attività con P.Iva: " + activity.getVatCode());
-	}
 }

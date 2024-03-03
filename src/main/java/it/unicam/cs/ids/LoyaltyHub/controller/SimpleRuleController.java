@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/api/Rule")
-public class SimpleRuleController {
+public class SimpleRuleController implements RuleController{
 
     private final RuleManager ruleManager;
 
@@ -30,10 +30,10 @@ public class SimpleRuleController {
      * @throws EntityNotFoundException if the rule is not found.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Rule> getInstance(@PathVariable Long id) throws EntityNotFoundException {
-        Rule rule = ruleManager.getInstance(id);
-        return ResponseEntity.ok(rule);
-    }
+	public Rule getInstance(@PathVariable Long id) throws EntityNotFoundException {
+		return ruleManager.getInstance(id);
+	}
+
 
     /**
      * Creates a new simple point-based rule.
@@ -78,10 +78,10 @@ public class SimpleRuleController {
      * @throws IdConflictException, EntityNotFoundException if the deletion fails.
      */
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Boolean> delete(@PathVariable Long id) throws IdConflictException, EntityNotFoundException {
-        boolean deleted = ruleManager.delete(id);
-        return ResponseEntity.ok(deleted);
-    }
+    @Override
+	public boolean delete(@PathVariable Long id) throws IdConflictException, EntityNotFoundException {
+		return ruleManager.delete(id);
+	}
 
     /**
      * Checks if a rule exists by its ID.
@@ -89,8 +89,18 @@ public class SimpleRuleController {
      * @return True if the rule exists, false otherwise.
      */
     @GetMapping("/exists/{id}")
-    public ResponseEntity<Boolean> exists(@PathVariable Long id) {
-        boolean exists = ruleManager.exists(id);
-        return ResponseEntity.ok(exists);
+    @Override
+    public boolean exists(@PathVariable Long id) {
+        return ruleManager.exists(id);
     }
+
+    @Override
+    public Rule create(Rule object) throws EntityNotFoundException, IdConflictException {
+        return ruleManager.create(object);
+    }
+
+	@Override
+	public Rule update(Rule object) throws IdConflictException, EntityNotFoundException {
+		return null;
+	}
 }

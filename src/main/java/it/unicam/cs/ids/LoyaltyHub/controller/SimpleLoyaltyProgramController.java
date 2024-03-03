@@ -113,37 +113,37 @@ public class SimpleLoyaltyProgramController implements LoyaltyProgramController 
 
     @PostMapping("/enrollActivity/{programName}/{activityEmail}")
     public Activity enrollActivity(@PathVariable String programName, @PathVariable String activityEmail) throws IdConflictException, EntityNotFoundException {
-        checkActivity(activityEmail, programName);
+/*        checkActivity(activityEmail, programName);
         LoyaltyProgram loyaltyProgram = loyaltyProgramRepository.findByProgramName(programName)
             .orElseThrow(() -> new EntityNotFoundException("Program with name " + programName + " not found."));
         Activity activity = activityRepository.findByEmail(activityEmail)
             .orElseThrow(() -> new EntityNotFoundException("Activity with email " + activityEmail + " not found."));
         loyaltyProgram.enrollActivity(activity);
         return activityManager.updateWithLoyaltyProgram(activity.getUserId(), loyaltyProgram);
-    }
+*/ return null;    }
 
 
     @PostMapping("/enrollCostumer/{activityEmail}/{costumerEmail}")
     public Collection<LoyaltyProgram> enrollCostumer(@PathVariable String activityEmail, @PathVariable String costumerEmail) throws EntityNotFoundException, IdConflictException {
-        checkEnrollCostumer(activityEmail, costumerEmail);
+/*        checkEnrollCostumer(activityEmail, costumerEmail);
         activityRepository.findByEmail(activityEmail).getLoyaltyProgram().enrollCostumer(costumerRepository.findByEmail(costumerEmail));
         costumerManager.updateWithLoyaltyProgram(costumerRepository.findByEmail(costumerEmail).getUserId(),activityRepository.findByEmail(activityEmail).getLoyaltyProgram());
        return costumerRepository.findByEmail(costumerEmail).getFidelityCard().getLoyaltyPrograms();
-    }
+*/ return null;    }
     
     @Override
     @PostMapping("/unEnrollActivity/{programName}/{activityEmail}")
     public boolean unEnrollActivity(@PathVariable String programName, @PathVariable String activityEmail) throws IdConflictException, EntityNotFoundException {
-        loyaltyProgramRepository.findByProgramName(programName).unEnrolledActivity(activityRepository.findByEmail(activityEmail));
+/*        loyaltyProgramRepository.findByProgramName(programName).unEnrolledActivity(activityRepository.findByEmail(activityEmail));
         updateActivityAfterUnsubscribed(activityEmail);
         return !loyaltyProgramRepository.findByProgramName(programName).getEnrolledActivities().contains(activityRepository.findByEmail(activityEmail));
-    }
+*/ return false;    }
 
     private void updateActivityAfterUnsubscribed(String activityEmail) {
-        Activity activity = activityRepository.findByEmail(activityEmail);
+/*        Activity activity = activityRepository.findByEmail(activityEmail);
         activity.setLoyaltyProgram(null);
         activityRepository.save(activity);
-    }
+*/    }
 
 
     @GetMapping("/listCostumer/{programName}")
@@ -175,9 +175,9 @@ public class SimpleLoyaltyProgramController implements LoyaltyProgramController 
     }
 
     private void checkIfCostumerIsAlreadyEnrolled(String activityEmail, String costumerEmail) {
-        if(costumerRepository.findByEmail(costumerEmail).getFidelityCard().getLoyaltyPrograms().contains(activityRepository.findByEmail(activityEmail).getLoyaltyProgram()))
+/*        if(costumerRepository.findByEmail(costumerEmail).getFidelityCard().getLoyaltyPrograms().contains(activityRepository.findByEmail(activityEmail).getLoyaltyProgram()))
             throw new IllegalArgumentException("Consumatore gà iscritto al Programma");
-    }
+*/    }
 
 
 }

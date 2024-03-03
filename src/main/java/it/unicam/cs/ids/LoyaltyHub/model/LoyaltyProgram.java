@@ -10,6 +10,7 @@ import org.hibernate.Hibernate;
 
 import java.util.LinkedHashSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -82,12 +83,12 @@ public class LoyaltyProgram {
     /**
      * Enrolls an activity in the loyalty program.
      *
-     * @param activity The activity to be enrolled.
+     * @param optional The activity to be enrolled.
      */
-    public void enrollActivity(Activity activity) {
-        this.enrolledActivities.add(activity);
-        activity.setLoyaltyProgram(this);
-        activity.setProgramName(this.programName);
+    public void enrollActivity(Activity optional) {
+        this.enrolledActivities.add(optional);
+        optional.setLoyaltyProgram(this);
+        optional.setProgramName(this.programName);
     }
 
     /**

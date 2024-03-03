@@ -92,9 +92,10 @@ public class SimpleCostumerController implements CostumerController {
      *
      * @param costumerEmail The email address associated with the costumer.
      * @return The total points on the costumer's fidelity card.
+     * @throws EntityNotFoundException 
      */
     @GetMapping("/totalPoints/{costumerEmail}")
-    public int getTotalCardPoints(@PathVariable String costumerEmail) {
+    public int getTotalCardPoints(@PathVariable String costumerEmail) throws EntityNotFoundException {
         return costumerManager.getTotalPoints(costumerEmail);
     }
 

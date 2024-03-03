@@ -62,10 +62,4 @@ public class SimplePlatformAdminController implements PlatformAdminController {
     public boolean exists(@PathVariable Long id) {
         return platformAdminManager.exists(id);
     }
-
-    @GetMapping("/listCostumers")
-    public Iterable<FidelityCard> getEnrolledCostumers(){ return fidelityCardRepository.findAll();}
-
-    @GetMapping("/listActivities")
-    public Iterable<Activity> getEnrolledActivities(){ return activityRepository.findAll();}
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -107,17 +108,20 @@ public class SimpleLoyaltyProgramController implements LoyaltyProgramController 
     @PostMapping("/createProgramWithRule/{programName}/{ruleName}")
     public LoyaltyProgram createLoyaltyProgramWithRule(@PathVariable String programName,@PathVariable String ruleName) throws IdConflictException, EntityNotFoundException {
         LoyaltyProgram newProgram= (new LoyaltyProgram(programName, ruleRepository.findByRuleName(ruleName)));
-        //checkProgram(newProgram)
         return loyaltyProgramManager.create(newProgram);
     }
 
     @PostMapping("/enrollActivity/{programName}/{activityEmail}")
     public Activity enrollActivity(@PathVariable String programName, @PathVariable String activityEmail) throws IdConflictException, EntityNotFoundException {
-        checkActivity(activityEmail,programName);
-        loyaltyProgramRepository.findByProgramName(programName).enrollActivity(activityRepository.findByEmail(activityEmail));
-        activityManager.updateWithLoyaltyProgram(activityRepository.findByEmail(activityEmail).getUserId(),loyaltyProgramRepository.findByProgramName(programName));
-        return activityRepository.findByEmail(activityEmail);
+        checkActivity(activityEmail, programName);
+        LoyaltyProgram loyaltyProgram = loyaltyProgramRepository.findByProgramName(programName)
+            .orElseThrow(() -> new EntityNotFoundException("Program with name " + programName + " not found."));
+        Activity activity = activityRepository.findByEmail(activityEmail)
+            .orElseThrow(() -> new EntityNotFoundException("Activity with email " + activityEmail + " not found."));
+        loyaltyProgram.enrollActivity(activity);
+        return activityManager.updateWithLoyaltyProgram(activity.getUserId(), loyaltyProgram);
     }
+
 
     @PostMapping("/enrollCostumer/{activityEmail}/{costumerEmail}")
     public Collection<LoyaltyProgram> enrollCostumer(@PathVariable String activityEmail, @PathVariable String costumerEmail) throws EntityNotFoundException, IdConflictException {
@@ -126,6 +130,7 @@ public class SimpleLoyaltyProgramController implements LoyaltyProgramController 
         costumerManager.updateWithLoyaltyProgram(costumerRepository.findByEmail(costumerEmail).getUserId(),activityRepository.findByEmail(activityEmail).getLoyaltyProgram());
        return costumerRepository.findByEmail(costumerEmail).getFidelityCard().getLoyaltyPrograms();
     }
+    
     @Override
     @PostMapping("/unEnrollActivity/{programName}/{activityEmail}")
     public boolean unEnrollActivity(@PathVariable String programName, @PathVariable String activityEmail) throws IdConflictException, EntityNotFoundException {

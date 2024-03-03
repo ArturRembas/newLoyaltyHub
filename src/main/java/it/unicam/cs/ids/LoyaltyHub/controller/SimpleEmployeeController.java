@@ -5,6 +5,7 @@ import it.unicam.cs.ids.LoyaltyHub.exception.IdConflictException;
 import it.unicam.cs.ids.LoyaltyHub.model.Employee;
 import it.unicam.cs.ids.LoyaltyHub.service.EmployeeManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,9 +32,9 @@ public class SimpleEmployeeController implements EmployeeController {
      * @throws EntityNotFoundException if the employee is not found.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Employee> getInstance(@PathVariable Long id) throws EntityNotFoundException {
-        Employee employee = employeeManager.getInstance(id);
-        return ResponseEntity.ok(employee);
+    @Override
+    public Employee getInstance(@PathVariable Long id) throws EntityNotFoundException {
+        return employeeManager.getInstance(id);
     }
 
     /**
@@ -44,11 +45,11 @@ public class SimpleEmployeeController implements EmployeeController {
      * @throws IdConflictException if there is an ID conflict.
      */
     @PostMapping("/createNew")
-    public ResponseEntity<Employee> create(@RequestBody Employee object) throws IdConflictException {
-        Employee createdEmployee = employeeManager.create(object);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdEmployee);
+    @Override
+    public Employee create(@RequestBody Employee object) throws EntityNotFoundException, IdConflictException {
+        return employeeManager.create(object);
     }
-
+    
     @Override
     public Employee update(Employee object) throws EntityNotFoundException, IdConflictException {
         return null;
@@ -62,9 +63,9 @@ public class SimpleEmployeeController implements EmployeeController {
      * @throws IdConflictException if there is an ID conflict during deletion.
      */
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) throws IdConflictException {
-        employeeManager.delete(id);
-        return ResponseEntity.ok().build();
+    @Override
+    public boolean delete(@PathVariable Long id) throws IdConflictException, EntityNotFoundException {
+        return employeeManager.delete(id);
     }
 
     /**
@@ -74,8 +75,9 @@ public class SimpleEmployeeController implements EmployeeController {
      * @return ResponseEntity containing a boolean indicating existence and HTTP status OK.
      */
     @GetMapping("/exists/{id}")
-    public ResponseEntity<Boolean> exists(@PathVariable Long id) {
-        boolean exists = employeeManager.exists(id);
-        return ResponseEntity.ok(exists);
+    @Override
+    public boolean exists(Long id) {
+        return employeeManager.exists(id);
     }
+
 }

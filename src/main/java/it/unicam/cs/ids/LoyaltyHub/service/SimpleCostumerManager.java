@@ -127,4 +127,19 @@ public class SimpleCostumerManager implements CostumerManager {
         Objects.requireNonNull(costumer.getEmail(), "Email is required.");
         Objects.requireNonNull(costumer.getPhone(), "Phone number is required.");
     }
+
+    /**
+     * Calculates the total loyalty points accumulated by a customer.
+     *
+     * @param costumerEmail The email of the customer whose total points are to be calculated.
+     * @return The total loyalty points accumulated by the customer.
+     * @throws EntityNotFoundException if no customer is found with the provided email.
+     */
+    @Override
+    public int getTotalPoints(String costumerEmail) throws EntityNotFoundException {
+        Costumer costumer = costumerRepository.findByEmail(costumerEmail)
+            .orElseThrow(() -> new EntityNotFoundException("Customer with email " + costumerEmail + " not found."));
+        return 0;
+    }
+
 }

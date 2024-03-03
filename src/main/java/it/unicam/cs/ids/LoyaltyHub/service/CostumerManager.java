@@ -27,5 +27,5 @@ public interface CostumerManager extends EntityController<Costumer, Long> {
      */
     Costumer updateWithLoyaltyProgram(Long costumerId, LoyaltyProgram program) throws EntityNotFoundException, IdConflictException;
 
-	int getTotalPoints(String costumerEmail);
+	int getTotalPoints(String costumerEmail) throws EntityNotFoundException;
 }

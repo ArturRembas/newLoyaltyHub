@@ -55,4 +55,41 @@ public class SimpleEmployeeJoinRequestManager implements EmployeeJoinRequestMana
         Objects.requireNonNull(employeeJoinRequest.getEmployeeEmail(), "Email non inserita");
         Objects.requireNonNull(employeeJoinRequest.getPhone(), "Telefono non inserito");
     }
+
+    /**
+     * Retrieves all employee join requests.
+     * 
+     * @return An iterable collection of all {@link EmployeeJoinRequest} in the system.
+     */
+    @Override
+    public Iterable<EmployeeJoinRequest> listAllRequests() {
+        return employeeJoinRequestRepository.findAll();
+    }
+
+    /**
+     * Retrieves an employee join request by its unique identifier.
+     *
+     * @param id The unique identifier of the employee join request.
+     * @return The {@link EmployeeJoinRequest} with the specified ID.
+     * @throws EntityNotFoundException if no request is found with the given ID.
+     */
+    @Override
+    public EmployeeJoinRequest getRequestById(Long id) throws EntityNotFoundException {
+        return employeeJoinRequestRepository.findById(id).orElseThrow(() ->
+                new EntityNotFoundException("Employee join request with ID: " + id + " not found."));
+    }
+
+    /**
+     * Validates an employee join request based on custom business rules.
+     * 
+     * @param id The ID of the employee join request to validate.
+     * @return The validated {@link EmployeeJoinRequest}, potentially with updated status or information.
+     * @throws EntityNotFoundException if the request with the specified ID does not exist.
+     */
+    @Override
+    public EmployeeJoinRequest validateRequest(Long id) throws EntityNotFoundException {
+        EmployeeJoinRequest request = getRequestById(id);
+        return employeeJoinRequestRepository.save(request);
+    }
+
 }

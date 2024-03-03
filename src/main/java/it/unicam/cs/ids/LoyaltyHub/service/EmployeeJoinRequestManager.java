@@ -1,5 +1,6 @@
 package it.unicam.cs.ids.LoyaltyHub.service;
 
+import it.unicam.cs.ids.LoyaltyHub.exception.EntityNotFoundException;
 import it.unicam.cs.ids.LoyaltyHub.model.EmployeeJoinRequest;
 
 /**
@@ -11,8 +12,8 @@ public interface EmployeeJoinRequestManager extends EntityManager<EmployeeJoinRe
 
 	Iterable<EmployeeJoinRequest> listAllRequests();
 
-	EmployeeJoinRequest getRequestById(Long id);
+	EmployeeJoinRequest getRequestById(Long id) throws EntityNotFoundException;
 
-	EmployeeJoinRequest validateRequest(Long id);
+	EmployeeJoinRequest validateRequest(Long id) throws EntityNotFoundException;
     
 }
